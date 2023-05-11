@@ -25,13 +25,20 @@ const InternetSection: React.FC = () => {
   React.useEffect(() => {
     socket.connect();
 
-    socket.on('data', data => {
-      const {item, value} = JSON.parse(data);
-      if (item === 'fan') setFan(value == 1);
-      if (item === 'light') setLight(value == 1);
+    socket.on('itemUpdated', ({item, value}) => {
+      switch (item) {
+        case 'fan':
+          setFan(value);
+          break;
+        case 'light':
+          setLight(value);
+          break;
+        default:
+          console.log(`Error: Unknown item: ${item}`);
+      }
     });
 
-    socket.emit('data', {type: 'GET_INFO'});
+    socket.emit('readItem');
 
     return () => {
       socket.disconnect();
@@ -42,14 +49,14 @@ const InternetSection: React.FC = () => {
     const newLight = !light;
     setLight(newLight);
 
-    socket.emit('data', {type: newLight ? 'LIGHT_ON' : 'LIGHT_OFF'});
+    socket.emit('updateItem', {item: 'light', value: newLight});
   }
 
   function handleFanChange() {
     const newFan = !fan;
     setFan(newFan);
 
-    socket.emit('data', {type: newFan ? 'FAN_ON' : 'FAN_OFF'});
+    socket.emit('updateItem', {item: 'fan', value: newFan});
   }
 
   return (
@@ -68,18 +75,6 @@ const InternetSection: React.FC = () => {
         <DataTable style={{gap: 25}}>
           <DataTable.Row>
             <DataTable.Cell>
-              <Text variant="headlineSmall">Light Bulb</Text>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <Switch
-                style={style.switch}
-                value={light}
-                onChange={handleLightChange}
-              />
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
               <Text variant="headlineSmall">Fan</Text>
             </DataTable.Cell>
             <DataTable.Cell numeric>
@@ -87,6 +82,18 @@ const InternetSection: React.FC = () => {
                 style={style.switch}
                 value={fan}
                 onChange={handleFanChange}
+              />
+            </DataTable.Cell>
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>
+              <Text variant="headlineSmall">Light Bulb</Text>
+            </DataTable.Cell>
+            <DataTable.Cell numeric>
+              <Switch
+                style={style.switch}
+                value={light}
+                onChange={handleLightChange}
               />
             </DataTable.Cell>
           </DataTable.Row>
