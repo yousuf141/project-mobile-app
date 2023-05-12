@@ -10,3 +10,15 @@ This is the mobile app for my final year project, it is a react native app which
 | Env Variable            | Description                                                     | Example               |
 |-------------------------|-----------------------------------------------------------------|-----------------------|
 | REACT__APP_WS_ENDPOINT  | This needs to point to the web service end point of the project | http://localhost:3000 |
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm start
