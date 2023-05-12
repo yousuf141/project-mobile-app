@@ -15,7 +15,7 @@ class BluetoothService {
       'android.permission.BLUETOOTH_CONNECT',
     );
     if (permissionCheck === false) {
-      permissionsNeeded.push('android.permission.BLUETOOTH_SCAN');
+      permissionsNeeded.push('android.permission.BLUETOOTH_CONNECT');
     }
 
     let allGranted = true;
